@@ -41,7 +41,7 @@ async function run() {
             const services = await cursor.limit(6).toArray();
             res.send(services);
         });
-        app.put('/gadgets/:id', async (req, res) => {
+        app.put('/gadget/:id', async (req, res) => {
             const filter = req.params.id
             console.log(req.body)
             console.log(filter)
@@ -68,13 +68,22 @@ async function run() {
             res.send(stockChart)
         });
         app.delete('/gadgets/:id', async (req, res) => {
+            console.log(req.params.id)
             const filter = req.params.id
             console.log(req.body)
             console.log(filter)
             const query = { _id: ObjectId(filter) };
-            const result = await movies.deleteOne(query);
+            const result = await database.deleteOne(query);
             res.send(result)
         });
+        //post
+        app.post('/gadgets', async (req, res) => {
+            console.log(req.body)
+            const newService = req.body;
+            const result = await database.insertOne(newService);
+            console.log(result)
+            res.send(result);
+        })
 
     } finally {
         // await client.close();
