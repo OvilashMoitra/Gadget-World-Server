@@ -20,6 +20,7 @@ async function run() {
 
         const database = client.db("gadget").collection("gadgets");
         const stockCollection = client.db("gadget").collection("stockChart");
+        const ownerDataCollection = client.db("gadget").collection("ownerData");
         app.get('/gadgets/filter', async (req, res) => {
             const filter = req.query.gadget
             console.log(filter)
@@ -41,6 +42,12 @@ async function run() {
             const services = await cursor.limit(6).toArray();
             res.send(services);
         });
+        app.get('/mydata', async (req, res) => {
+            const query = {};
+            const cursor = ownerDataCollection.find(query);
+            const services = await cursor.toArray();
+            res.send(services);
+        });
         app.put('/gadget/:id', async (req, res) => {
             const filter = req.params.id
             console.log(req.body)
@@ -49,7 +56,7 @@ async function run() {
             // updating number
             const updateDoc = {
                 $set: {
-                    quantity: `${req.body.quantity}`
+                    stock: `${req.body.stock}`
                 },
             };
             const result = await database.updateOne(query, updateDoc);
@@ -68,12 +75,17 @@ async function run() {
             res.send(stockChart)
         });
         app.delete('/gadgets/:id', async (req, res) => {
-            console.log(req.params.id)
+            // console.log(req.params.id)
             const filter = req.params.id
-            console.log(req.body)
-            console.log(filter)
+            // console.log(req.body)
+            // console.log(filter)
             const query = { _id: ObjectId(filter) };
             const result = await database.deleteOne(query);
+            res.send(result)
+        });
+        app.post('/ownerdata', async (req, res) => {
+            const ownerData = req.body;
+            const result = await ownerDataCollection.insertOne(ownerData);
             res.send(result)
         });
         //post
