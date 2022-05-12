@@ -29,6 +29,14 @@ async function run() {
             const hi = await cursor.toArray();
             res.send(hi)
         });
+        app.get('/myaddeddata', async (req, res) => {
+            const filter = req.query.mailid
+            console.log(filter)
+            const query = { email: filter };
+            const cursor = database.find(query);
+            const result = await cursor.toArray();
+            res.send(result)
+        });
         app.get('/gadgets/:id', async (req, res) => {
             const filter = req.params.id
             console.log(filter)
@@ -42,11 +50,12 @@ async function run() {
             const services = await cursor.limit(6).toArray();
             res.send(services);
         });
-        app.get('/mydata', async (req, res) => {
-            const query = {};
+        app.get('/mydeleteddata', async (req, res) => {
+            const filter = req.query.mailid
+            const query = { email: filter };
             const cursor = ownerDataCollection.find(query);
-            const services = await cursor.toArray();
-            res.send(services);
+            const result = await cursor.toArray();
+            res.send(result)
         });
         app.put('/gadget/:id', async (req, res) => {
             const filter = req.params.id
