@@ -20,6 +20,7 @@ async function run() {
 
         const database = client.db("gadget").collection("gadgets");
         const stockCollection = client.db("gadget").collection("stockChart");
+        const reviewsCollection = client.db("gadget").collection("reviews");
         const ownerDataCollection = client.db("gadget").collection("ownerData");
         app.get('/gadgets/filter', async (req, res) => {
             const filter = req.query.gadget
@@ -105,6 +106,22 @@ async function run() {
             console.log(result)
             res.send(result);
         })
+        // review get API
+        app.get('/reviews', async (req, res) => {
+            const query = {};
+            const cursor = reviewsCollection.find(query);
+            const reviews = await cursor.toArray();
+            res.send(reviews)
+        });
+        // review get API
+        app.post('/reviews', async (req, res) => {
+            console.log(req.body)
+            const newService = req.body;
+            const result = await reviewsCollection.insertOne(newService);
+            console.log(result)
+            res.send(result);
+        })
+
 
     } finally {
     }
